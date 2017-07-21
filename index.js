@@ -4,8 +4,9 @@ import { GraphQLSchema } from "graphql";
 import { schema } from "./graphqlize";
 import Good from "good";
 import config from "./config";
-
+import wsServer from "./ws-server";
 const server = new hapi.Server();
+
 server.connection({ host: "localhost", port: config.API_PORT });
 
 // register plugins to server instance
@@ -58,7 +59,7 @@ server.register(
     if (err) {
       throw err; // something bad happened loading the plugin
     }
-
+    wsServer.activate(server);
     server.start(err => {
       if (err) {
         throw err;

@@ -19,6 +19,6 @@ npm start
 
 ### Usage
 
-Please navigate to [http://localhost:8080/graphiql](http://localhost:8080/graphiql) to play with the provided services
+Please navigate to [http://localhost:8080/api/graphiql](http://localhost:8080/api/graphiql) to play with the provided services
 
 ![](doc/graphiql.png)

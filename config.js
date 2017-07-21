@@ -2,7 +2,7 @@
 const BASE_PORT = process.env.PORT || 3000;
 const BASE_HOST = `localhost`;
 const API_PORT = process.env.API_PORT | 8080;
-const API_HOST = `api.ferosh.vn`;
+const API_HOST = `localhost`;
 
 const GRAPHQL_ENDPOINT = "/api/graphql";
 const GRAPHIQL_ENDPOINT = "/api/graphiql";

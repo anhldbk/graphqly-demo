@@ -5,8 +5,8 @@ module.exports = gBuilder => {
   `);
 
   gBuilder.type("Product").def(`
-    id: ID!
-    name: String!
+    id: ID
+    name: String
     link: String
     price: Int
   `);
@@ -33,14 +33,29 @@ module.exports = gBuilder => {
     products(limit: Int = 20, offset: Int = 0, filter: ProductFilter): Products
     `
     )
+    .set("scope", ["products.read"])
+    .hook({
+      options: {
+        point: "pre.query"
+      },
+      handle: function(opts) {
+        return function(root, args, context) {
+          // `this` is binded to the query (or mutation)
+          console.log("In query....", this._name);
+          return [root, args, context];
+        };
+      }
+    })
     .resolve((root, args, context) => {
       const { offset, limit, filter } = args;
       return getProducts({ offset, limit, filter });
     });
 
-  gBuilder.subscription(`
-    productAdded: Product!
-  `);
+  gBuilder.subscription(
+    `
+    productAdded: Product
+  `
+  );
 
   gBuilder
     .mutation(
@@ -48,9 +63,11 @@ module.exports = gBuilder => {
     createProduct(product: ProductInput): Response!
     `
     )
-    .resolve((root, args, context) => {
+    .resolve(function(root, args, context) {
       const { product } = args;
-      this.publish("productAdded", product);
+      process.nextTick(() => {
+        this.publish("productAdded", product);
+      });
       return createProduct({ product });
     });
 };
