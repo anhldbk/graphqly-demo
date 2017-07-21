@@ -3,16 +3,17 @@ import { graphqlHapi, graphiqlHapi } from "graphql-server-hapi";
 import { GraphQLSchema } from "graphql";
 import { schema } from "./graphqlize";
 import Good from "good";
-import { API_PORT } from "./config";
-
+import config from "./config";
+import wsServer from "./ws-server";
 const server = new hapi.Server();
-server.connection({ host: "localhost", port: API_PORT });
+
+server.connection({ host: "localhost", port: config.API_PORT });
 
 // register plugins to server instance
 server.register({
   register: graphqlHapi,
   options: {
-    path: "/graphql",
+    path: config.GRAPHQL_ENDPOINT,
     graphqlOptions: () => ({ pretty: true, schema }),
     route: {
       cors: true
@@ -23,9 +24,9 @@ server.register({
 server.register({
   register: graphiqlHapi,
   options: {
-    path: "/graphiql",
+    path: config.GRAPHIQL_ENDPOINT,
     graphiqlOptions: {
-      endpointURL: "/graphql"
+      endpointURL: config.GRAPHQL_ENDPOINT
     }
   }
 });
@@ -58,7 +59,7 @@ server.register(
     if (err) {
       throw err; // something bad happened loading the plugin
     }
-
+    wsServer.activate(server);
     server.start(err => {
       if (err) {
         throw err;
