@@ -38,6 +38,10 @@ module.exports = gBuilder => {
       return getProducts({ offset, limit, filter });
     });
 
+  gBuilder.subscription(`
+    productAdded: Product!
+  `);
+
   gBuilder
     .mutation(
       `
@@ -46,6 +50,7 @@ module.exports = gBuilder => {
     )
     .resolve((root, args, context) => {
       const { product } = args;
+      this.publish("productAdded", product);
       return createProduct({ product });
     });
 };

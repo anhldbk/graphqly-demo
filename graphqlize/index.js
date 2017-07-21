@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { createBuilder } from "graphqly";
+import { createBuilder, pubsub } from "../graphqly";
 import Base from "./base";
 import Brand from "./brand";
 import Category from "./category";
@@ -13,5 +13,6 @@ gBuilder.use(Product);
 const schema = gBuilder.build();
 
 module.exports = {
-  schema
+  schema,
+  pubsub
 };
